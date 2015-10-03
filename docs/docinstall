@@ -1,0 +1,19 @@
+- Installation Ubuntu MAte
+	Suivre instruction https://ubuntu-mate.org/raspberry-pi/
+	(dl image puis copie sur la carte, re size du fs après premier démarrage...)
+- Installer openjdk 7 (jre only)
+	sudo apt-get install openjdk-7-jre
+- Installation subsonic + création playlist
+	dl le .deb
+	sudo dpkg -i subsonic-5.2.1.deb 
+	aller sur localhost:4040, se logger avec admin/admin
+	configurer votre dossier de music 
+	nb : pour avoir accès aux pochettes il faut que les morceaux se trouvent chacun dans leur répertoire, les pochettes des albums étant liés au répertoire (si non trouvées automatiquement on peut cliquer sur change depuis l'ui)
+	créer une playlist "myjukebox", le nom est important, et ajoutez y vos morceaux (cochez les morceaux et choisissez "add to playlist", puis sélectionner "myjukebox")
+- Installation appli
+	checkout du master sur le repo git
+- Mp3 pour firefox
+	sudo apt-get install gstreamer1.0-libav
+- Lancer l'appli : ouvrir le index.html dans un navigateur
+
+

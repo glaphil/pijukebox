@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>MyJukebox</title>
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+  </head>
+
+  <body id="page">
+
+    <!-- audio element -->
+    <audio id="sound"></audio>
+    
+    <!-- thumbs page -->
+    <div class="container-fluid" id="thumbs"></div>    
+    
+    <!-- modal message -->
+    <div id="modal" class="modal">
+      <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title text-center"></h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- keyboard control legend -->
+    <div id="keyboardControls" style="display:none"> 
+     <nav class="navbar navbar-fixed-bottom">
+        <div class="container-fluid">
+          <div>
+            <ul class="nav navbar-nav">
+              <li>insert coin : <span class="label label-primary">C</span>&nbsp;</li>
+              <li>play song : <span class="label label-warning">1-8</span>&nbsp;</li>
+              <li>next page : <span class="label label-success">N</span>&nbsp;</li>
+              <li>previous page : <span class="label label-success">P</span>&nbsp;</li>
+              <li>stop song : <span class="label label-danger">S</span>&nbsp;</li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="jquery-1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <!-- main js script -->
+    <script src="js/main.js"></script>
+ 
+  </body>
+
+</html>

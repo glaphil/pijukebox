@@ -28,6 +28,7 @@
   // display & controls
   var MAX_THUMBS=8;
   var NO_COVER_URL="img/nocover.png"
+  // size ok for 1440x900, try 250 for my laptop (1920*1080)
   var COVER_SIZE=200;
   var MODAL_TIMEOUT=1500;
 

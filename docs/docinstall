@@ -18,17 +18,14 @@
 	sudo apt-get install gstreamer1.0-libav
 - Lancer l'appli : ouvrir le index.html dans un navigateur
 
-- Installer environnement pyhton + le nécessaire
-	sudo apt-get install python
-	sudo apt-get install python3
-	sudo apt-get install python3-pip
-	sudo pip3 install RPi.GPIO
-	sudo apt-get install libudev-dev
-	sudo pip3 install python-uinput
+STOP sur mate probleme avec le gpio
+donc retour sur rasbpian, ça tombe bien une version vient de sortir et sur epiphany : http://html5test.com/ on a bien mp3 ok, et finalement ça à l'air plus rapide
 
-sudo apt-get install python-dev
-sudo pip install RPi.GPIO
+- epiphany presque ok -> certains morceaux bugs d'affichage sur la barre de progression
 
-modprobe uinput
-(To load it automatically on every boot, add uinput to /etc/modules.)
+vide grenier
+enceintes : http://www.engadget.com/products/logitech/x-230/ 
+écran : http://www.cnet.com/products/dell-ultrasharp-1909w-lcd-monitor-19-series/specs/
+
+
 

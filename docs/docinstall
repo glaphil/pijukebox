@@ -1,6 +1,8 @@
 - Installation Ubuntu MAte
 	Suivre instruction https://ubuntu-mate.org/raspberry-pi/
 	(dl image puis copie sur la carte, re size du fs après premier démarrage...)
+- Update
+	sudo apt-get update && sudo apt-get upgrade
 - Installer openjdk 7 (jre only)
 	sudo apt-get install openjdk-7-jre
 - Installation subsonic + création playlist
@@ -16,4 +18,17 @@
 	sudo apt-get install gstreamer1.0-libav
 - Lancer l'appli : ouvrir le index.html dans un navigateur
 
+- Installer environnement pyhton + le nécessaire
+	sudo apt-get install python
+	sudo apt-get install python3
+	sudo apt-get install python3-pip
+	sudo pip3 install RPi.GPIO
+	sudo apt-get install libudev-dev
+	sudo pip3 install python-uinput
+
+sudo apt-get install python-dev
+sudo pip install RPi.GPIO
+
+modprobe uinput
+(To load it automatically on every boot, add uinput to /etc/modules.)
 

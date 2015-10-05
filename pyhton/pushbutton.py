@@ -11,6 +11,7 @@ print("simple button push test")
 
 try:  
   while True:  
+    sleep(0.2)
     if GPIO.input(7):               
       print("button down, gpio HIGH")
     else:

@@ -15,9 +15,13 @@ def my_callback(channel):
 GPIO.add_event_detect(7, GPIO.RISING, callback=my_callback, bouncetime=200) 
 
 
-try:  
-  while True:  
-    
+# juste pour bloquer l'exécution pour montrer que c'est sur un autre thread que l'event est traité
+key = input("press a key? ")
+print(key)
+
+#try:  
+#  while True:  
+#	sleep(0.2)    
 
 except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  
   print("end")

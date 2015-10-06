@@ -17,7 +17,9 @@ GPIO.add_event_detect(7, GPIO.RISING, callback=my_callback, bouncetime=200)
 
 try:  
   while True:  
-    sleep(0.5)
+    
 
 except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  
   print("end")
+  GPIO.cleanup()
+

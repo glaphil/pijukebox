@@ -22,8 +22,7 @@ print(key)
 #try:  
 #  while True:  
 #	sleep(0.2)    
-
-except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  
-  print("end")
-  GPIO.cleanup()
-
+# except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  
+#	print("end")
+  
+GPIO.cleanup()

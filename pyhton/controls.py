@@ -1,50 +1,30 @@
+# http://python-evdev.readthedocs.org/en/latest/apidoc.html
 
+#import time
+from evdev import uinput, ecodes as e
 
-import time
-import uinput
-
-def main():
-    events = (
-    uinput.KEY_C,
-    uinput.KEY_N,
-    uinput.KEY_P,
-    uinput.KEY_1,
-    uinput.KEY_2,
-    uinput.KEY_3,
-    uinput.KEY_4,
-    uinput.KEY_5,
-    uinput.KEY_6,
-    uinput.KEY_7,
-    uinput.KEY_8
-    )
-
-    options = {
-        'C' : uinput.KEY_C,
-#        N : uinput.KEY_N,
-#        P : uinput.KEY_P,
-#        1 : uinput.KEY_1,
-#        2 : uinput.KEY_2,
-#        3 : uinput.KEY_3,
-#        4 : uinput.KEY_4,
-#        5 : uinput.KEY_5,
-#        6 : uinput.KEY_6,
-#        7 : uinput.KEY_7,
-        '8' : uinput.KEY_8
-    }
-
-    key = input("press a key? ")
-    print(key)
- 
-    emitKey(options[key])
+options = {
+	'C' : e.KEY_C,
+	'N' : e.KEY_N,
+	'P' : e.KEY_P,
+	'1' : e.KEY_KP1,
+	'2' : e.KEY_KP2,
+	'3' : e.KEY_KP3,
+	'4' : e.KEY_KP4,
+	'5' : e.KEY_KP5,
+	'6' : e.KEY_KP6,
+	'7' : e.KEY_KP7,
+	'8' : e.KEY_KP8
+}
 
 def emitKey(key):
-    with uinput.Device(events) as device:
-        #time.sleep(1)
-        device.emit_click(key)
-        
-if __name__ == "__main__":
-    main()
+	with uinput.UInput() as ui:
+		ui.write(e.EV_KEY, key, 1)
+		ui.write(e.EV_KEY, key, 0)
+		ui.syn()
 
+key = input("press a key? ")
 
+emitKey(options[key])
 
 

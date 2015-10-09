@@ -6,6 +6,7 @@ options = {
   'C' : e.KEY_C,
   'N' : e.KEY_N,
   'P' : e.KEY_P,
+  'S' : e.KEY_S ,
   '1' : e.KEY_KP1,
   '2' : e.KEY_KP2,
   '3' : e.KEY_KP3,
@@ -44,21 +45,27 @@ try:
     sleep(0.5)
 
     if not GPIO.input(17):
+      print("GPIO17")
       emitKey(options['1'])
 
     if not GPIO.input(4):
+      print("GPIO4")
       emitKey(options['2'])
 
     if not GPIO.input(27):
+      print("GPIO27")    
       emitKey(options['2'])
 
     if not GPIO.input(7):
+      print("GPIO7")  
       emitKey(options['P'])
 
     if not GPIO.input(23):
+      print("GPIO23")
       emitKey(options['N'])
 
     if not GPIO.input(24):
+      print("GPIO24")
       emitKey(options['S']) 
 
 except KeyboardInterrupt:          # trap a CTRL+C keyboard interrupt  

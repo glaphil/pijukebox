@@ -65,6 +65,7 @@ def init_pin_mapping(pinKey):
 
 try:  
   for pinKey in mappings:
+    print("map ",pinKey[0]," to ",pinKey[1])
     init_pin_mapping(pinKey)
   while True:
     time.sleep(1)

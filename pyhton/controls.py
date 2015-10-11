@@ -27,4 +27,3 @@ key = input("press a key? ")
 
 emitKey(options[key])
 
-

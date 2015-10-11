@@ -23,3 +23,21 @@ donc retour sur rasbpian, ça tombe bien une version vient de sortir et sur epip
 
 - epiphany presque ok -> certains morceaux bugs d'affichage sur la barre de progression
 
+--- Nouvelle procédure 11/10/2015
+
+- installer raspbian https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
+
+df -h
+unmount des partitions
+dd bs=4M if=2015-09-24-raspbian-jessie.img of=/dev/mmcblk0
+ssh pi@IP 
+sudo raspi-config
+expand filesystem, change password, change locale, 
+
+- install subsonic
+sudo dpkg -i subsonic-5.2.1.deb
+...
+
+- git clone du projet
+git clone https://glaphil@bitbucket.org/glaphil/myjukebox.git
+

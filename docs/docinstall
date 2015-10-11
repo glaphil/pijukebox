@@ -41,3 +41,15 @@ sudo dpkg -i subsonic-5.2.1.deb
 - git clone du projet
 git clone https://glaphil@bitbucket.org/glaphil/myjukebox.git
 
+- install python libs et libudev-dev
+# deja dans raspbian
+# sudo apt-get install python3-pip
+# sudo pip3 install RPi.GPIO
+
+sudo apt-get install libudev-dev
+sudo pip3 install python-uinput
+sudo pip3 install evdev
+
+- pour lancer ne pas oublier le sudo modprobe uinput
+
+nb : ne fonctionne que lorsqu'un écran est branché

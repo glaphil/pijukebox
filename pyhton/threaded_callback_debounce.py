@@ -5,7 +5,7 @@ from time import sleep
 GPIO.setmode(GPIO.BOARD)
 
 # par défaut voltage haut
-GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # c down ici qu'il faut
 
 # un fil va du GPIO au boutton, et du bouton à la terre
 

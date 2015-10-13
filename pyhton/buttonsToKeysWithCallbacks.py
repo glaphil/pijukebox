@@ -70,7 +70,7 @@ def emitKey(pinKey):
     print(pinKey[1]," pressed")
     device.emit_click(pinKey[1])
     ignore_key_release_fix = True 
-  else
+  else:
     ignore_key_release_fix = False
   
   

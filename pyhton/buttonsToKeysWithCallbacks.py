@@ -59,6 +59,7 @@ mappings = [
 
 device = uinput.Device(keys)
 
+# because GPIO.FALLING detect both failling and rising edge, need to set this variable to fix that issue
 ignore_key_release_fix = False
 
 def init_pin_mapping(pinKey):

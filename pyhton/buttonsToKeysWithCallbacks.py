@@ -65,7 +65,7 @@ def init_pin_mapping(pinKey):
 
 def emitKey(pinKey):
   print(pinKey[1]," pressed")
-  device.emit_click(pinKey[1])
+  device.emit_key(pinKey[1],1)
 
 try:  
   for pinKey in mappings:

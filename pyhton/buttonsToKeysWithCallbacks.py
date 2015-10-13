@@ -9,7 +9,7 @@ import uinput
 GPIO.setmode(GPIO.BCM)
 
 # set bounce time to avoid multiple press
-BOUNCE_TIME=200
+BOUNCE_TIME=50
 
 # pins names / bcm gpio
 INSERT_COIN = 4
@@ -66,6 +66,7 @@ def init_pin_mapping(pinKey):
   GPIO.add_event_detect(pinKey[0], GPIO.FALLING, callback=lambda x: emitKey(pinKey), bouncetime=BOUNCE_TIME) 
 
 def emitKey(pinKey):
+  global ignore_key_release_fix
   if not ignore_key_release_fix:
     print(pinKey[1]," pressed")
     device.emit_click(pinKey[1])

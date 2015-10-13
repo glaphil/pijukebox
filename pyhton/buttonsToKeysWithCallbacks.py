@@ -59,14 +59,21 @@ mappings = [
 
 device = uinput.Device(keys)
 
+ignore_key_release_fix = False
+
 def init_pin_mapping(pinKey):
   GPIO.setup(pinKey[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
   GPIO.add_event_detect(pinKey[0], GPIO.FALLING, callback=lambda x: emitKey(pinKey), bouncetime=BOUNCE_TIME) 
 
 def emitKey(pinKey):
-  print(pinKey[1]," pressed")
-  device.emit_click(pinKey[1])
-
+  if(not fix_ignore_rising_edge){
+    print(pinKey[1]," pressed")
+    device.emit_click(pinKey[1])
+    ignore_key_release_fix = True 
+  }else{
+    ignore_key_release_fix = False
+  }
+  
 try:  
   for pinKey in mappings:
     print("map ",pinKey[0]," to ",pinKey[1])

@@ -66,7 +66,7 @@ def init_pin_mapping(pinKey):
   GPIO.add_event_detect(pinKey[0], GPIO.FALLING, callback=lambda x: emitKey(pinKey), bouncetime=BOUNCE_TIME) 
 
 def emitKey(pinKey):
-  if not fix_ignore_rising_edge
+  if not fix_ignore_rising_edge:
     print(pinKey[1]," pressed")
     device.emit_click(pinKey[1])
     ignore_key_release_fix = True 

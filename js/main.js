@@ -33,8 +33,11 @@
   var MODAL_TIMEOUT=1500;
 
   var currentPage=0;
+  var currentSongIndex=null; 
+  var currentSongKey=null; 
   var songs = [];
-  var coinInserted = false;
+  var coinInserted = false; 
+  // to avoid multiple modal display
   var lockModal = false; 
 
   var audioElement = $("#sound")[0];
@@ -148,6 +151,15 @@ function displayThumbs(songs, page){
       thumbsByRowCount=0
     }
   } 
+  // if current song playing presnet in page, add progress bar
+  if(currentSongIndex!=null && currentSongIndex>=index && currentSongIndex<index+MAX_THUMBS){
+    addProgressBar(currentSongKey)
+    refreshProgressBar();
+  }
+  // if no song playing remove eventual progress bar
+  if(currentSongIndex==null){
+    removeProgressBar();
+  }
 }
 
 function createThumbSong(song,left,divId){
@@ -194,10 +206,22 @@ function getProgressbar(){
   return bar;
 }
 
+function addProgressBar(key){
+  $("#song"+key).find(".media-body").append(getProgressbar());
+  $("#song"+key).find(".media-heading").prepend('<span class="glyphicon glyphicon-play"></span>');
+}
+
+function removeProgressBar(){
+    $(".progress").remove();
+    $(".glyphicon-play").remove();
+    currentSongIndex=null;
+    currentSongKey=null;
+}
+
 function refreshProgressBar(){
   $("#sound").on("timeupdate", function() {
     var progress = (this.currentTime / this.duration)*100; 
-    console.log(progress);
+    //console.log(progress);
     $("#progressBar").css("width", progress+"%");
     $("#progressBar").attr("aria-valuenow", progress+"%");
     // for case when song ended without pressing stop
@@ -297,9 +321,10 @@ function playSong(key){
 
     // map key to song index
     songIndex=(currentPage*MAX_THUMBS)+eval(key)-1;
-    console.log("song index "+songIndex)
-    console.log("play song "+songs[songIndex].title)
-
+    console.log("song index "+songIndex);
+    console.log("play song "+songs[songIndex].title);
+    currentSongIndex = songIndex;
+    currentSongKey=key;
     var streamSongUrl = SUBSONIC_API_URL + "/stream.view?id="+songs[songIndex].id+"&"+$.param(SUBSONIC_API_CREDENTIALS);
 
     audioElement.src = streamSongUrl;
@@ -307,10 +332,9 @@ function playSong(key){
     audioElement.play();
     coinInserted=false;
     console.log('play "'+songs[songIndex].title+'" ('+songs[songIndex].title+')');
-
+    
     // add progress bar and play icon
-    $("#song"+key).find(".media-body").append(getProgressbar());
-    $("#song"+key).find(".media-heading").prepend('<span class="glyphicon glyphicon-play"></span>');
+    addProgressBar(key)
     refreshProgressBar();
     blink($("#song"+key).find(".glyphicon-play"));
 
@@ -335,8 +359,7 @@ function stopSong(){
     audioElement.pause();
     audioElement.currentTime = 0;
     coinInserted=false;
-    $(".progress").remove();
-    $(".glyphicon-play").remove();
+    removeProgressBar()
   }else{
     // showModal("No song playing now"); 
     console.log("no song to stop");

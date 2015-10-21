@@ -2,8 +2,6 @@
 // TODO optim : utiliser la pagination
 // TOOD qualité : faire un truc pour recalculer le gain moyen de la playlist, replaygain, etc.. en se basant sur les infos tags
 // TODO bug : 
-//  si 1 seul morceau sur dernière page : non visibe
-//  si on change de page alors qu'on est en lecture et qu'on revient, la barre de progression est plus visible
 //  ne pas utiliser le width et height sur img (comment gérer la taile des nocover?)
 
 // workflow

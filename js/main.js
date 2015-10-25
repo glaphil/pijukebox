@@ -11,6 +11,8 @@
 // stop song set coin inserted to false if song is playing
 // can't play song if no coin inserted
 
+// TODO numéroter à partir de 0 et faire juste -1 sur les chiffres des morceaux 
+
 // subsonic
  var SUBSONIC_URL = "http://localhost:4040";
  var SUBSONIC_API_URL = SUBSONIC_URL+"/rest"
@@ -33,7 +35,12 @@
   var currentPage=0;
   var currentSongIndex=null; 
   var currentSongKey=null; 
+  // all songs from playlist
   var songs = [];
+  var songsCount = 0;
+  // current page songs
+  var page = [];
+
   var coinInserted = false; 
   // to avoid multiple modal display
   var lockModal = false; 
@@ -41,6 +48,9 @@
   var audioElement = $("#sound")[0];
 
 // to test display on smaller resolution
+
+// pour la set list utiliser 
+// array.pop()
 
 
 $(function(){
@@ -57,69 +67,44 @@ $(function(){
 });
 
 
-function showModal(message){
-  if(!lockModal){
-    lockModal=true;
-    $("#modal h1").text(message);
-    $("#modal").modal('show');
-      setTimeout(function(){
-        $("#modal").modal('hide');
-        lockModal=false;
-      }, MODAL_TIMEOUT);
+/* load songs from playlist to current page */
+function loadPage(pageId){
+  console.log("Load page ["+pageId+"]");
+  currentPage = pageId;
+  index = pageId*MAX_THUMBS;
+  page.length=0;
+  for(i = index; i < (MAX_THUMBS+(pageId*MAX_THUMBS))  && i<songs.length ; i++) {
+    page.push(songs[i]);
+  }
+  console.log(page);
+}
+
+/* swich to next page */
+function nextPage(){
+  if(hasNextPage()){
+    loadPage(currentPage+1);
+    // displayThumbs(songs,currentPage);
+  }else{
+    console.log("last page reached")
   }
 }
 
-function pingSubsonic(){
-    var url = SUBSONIC_API_URL + "/ping.view";
-    $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {          
-          // console.log(response);
-        })  
-        .fail(function(response) {
-           alert("Can't connect to susonic");
-        })
-};
-
-
-function getPlaylist(){
-    var url = SUBSONIC_API_URL + "/getPlaylists.view";
-    $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {      
-          playlist=response["subsonic-response"]["playlists"]["playlist"];
-          $.each(playlist, function( index, playlist ) {
-              if(playlist["name"]===SUBSONIC_PLAYSLIST_NAME){
-                console.log( "playlist name"+" : "+playlist["name"]+" : "+playlist["id"]);
-                setPlaylistContent(playlist["id"])
-                return false;
-              }
-          });
-        })
-        .fail(function(response) {
-           alert("Can't get play list "+ SUBSONIC_PLAYSLIST_NAME);
-        })
+/* swich to previous page */
+function previousPage(){
+  if(hasPreviousPage()){
+    loadPage(currentPage-=1);
+    // displayThumbs(songs,currentPage);
+  }else{
+    console.log("first page reached")
+  }
 }
 
-function setPlaylistContent(playlistId){
-    var url = SUBSONIC_API_URL + "/getPlaylist.view?id="+playlistId;
-    $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {      
-          playlistContent=response["subsonic-response"]["playlist"]["entry"];
-          $.each(playlistContent, function( index, song ) {
-            songs.push({
-              id: song.id, 
-              title: song.title,
-              artist: song.artist,
-              album: song.album,
-              year: song.year,
-              genre: song.genre,
-              cover: song.coverArt,
-              duration: song.duration
-            })
-          })
-        })
-        .fail(function(response) {
-           alert("Can't get play list "+ playlistId);
-        })
-        .complete(function(data){
-           displayThumbs(songs,currentPage);
-        });
+function hasNextPage(){
+  return (currentPage+1)*MAX_THUMBS<songsCount;
+}
+
+function hasPreviousPage(){
+  return currentPage>0;
 }
 
 function displayThumbs(songs, page){
@@ -179,11 +164,6 @@ function createThumbSong(song,left,divId){
   return div;
 }
 
-function convertDurationToMMSS(duration){
-  var minutes = Math.floor(duration / 60); 
-  var seconds = ("0" + duration % 60).slice(-2); 
-  return minutes+":"+seconds;
-}
 
 function getCoverArt(song){
   if(song.cover){
@@ -196,39 +176,6 @@ function getCoverArt(song){
   }
 }
 
-function getProgressbar(){
-  var bar=$('<div class="progress">'+
-              '<div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
-              '</div>'+
-            '</div>');
-  return bar;
-}
-
-function addProgressBar(key){
-  $("#song"+key).find(".media-body").append(getProgressbar());
-  $("#song"+key).find(".media-heading").prepend('<span class="glyphicon glyphicon-play"></span>');
-}
-
-function removeProgressBar(){
-    $(".progress").remove();
-    $(".glyphicon-play").remove();
-    currentSongIndex=null;
-    currentSongKey=null;
-}
-
-function refreshProgressBar(){
-  $("#sound").on("timeupdate", function() {
-    var progress = (this.currentTime / this.duration)*100; 
-    //console.log(progress);
-    $("#progressBar").css("width", progress+"%");
-    $("#progressBar").attr("aria-valuenow", progress+"%");
-    // for case when song ended without pressing stop
-    if(progress==100){
-      $(".progress").remove();
-      $(".glyphicon-play").remove();
-    }
-  });
-}
 
 function listenKeyboard(){
   $('#page').bind('keyup', keyboard);
@@ -238,32 +185,32 @@ function keyboard(event) {
     var key=String.fromCharCode(event.keyCode);
     console.log('key: '+ key);
     if(isSongSelection(key)){
-        console.log("play song "+key)
+        console.log("key input : play song "+key)
         playSong(key);
     }else{
       switch (key) { 
         case 'N': 
-          console.log('next page');
+          console.log('key input : next page');
           nextPage();
           break;
         case 'P': 
-          console.log('previous page');
+          console.log('key input : previous page');
           previousPage();
           break;
         case 'C':
-          console.log('coin inserted');
+          console.log('key input : coin inserted');
           insertCoin()
           break;
         case 'S':
-          console.log('stop song');
+          console.log('key input : stop song');
           stopSong()
           break;
         case 'H':
-          console.log('toggle diplay controls');
+          console.log('key input : toggle diplay controls');
           $("#keyboardControls").toggle();
           break;
         default:
-          console.log('unknown command');
+          console.log('key input : unknown command');
       }
     }
 
@@ -343,14 +290,6 @@ function playSong(key){
 }
 
 
-function blink(selector){
-  $(selector).fadeOut(1000, function(){
-      $(this).fadeIn(1000, function(){
-          blink(this);
-      });
-  });
-}
-
 function stopSong(){
   if(!audioElement.paused){
     // showModal("Song has been stopped");
@@ -364,17 +303,5 @@ function stopSong(){
   }
 }
 
-function nextPage(){
-  if((currentPage+1)*MAX_THUMBS<songs.length){
-    currentPage+=1;
-    displayThumbs(songs,currentPage);
-  }
-}
 
-function previousPage(){
-  if(currentPage>0){
-    currentPage-=1;
-    displayThumbs(songs,currentPage);
-  }
-}
   

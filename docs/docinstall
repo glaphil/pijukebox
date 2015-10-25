@@ -50,6 +50,16 @@ sudo apt-get install libudev-dev
 sudo pip3 install python-uinput
 sudo pip3 install evdev
 
+IIMPORTANT il faut une version rpio gpio à jour
+sudo apt-get update && sudo apt-get install python-rpi.gpio python3-rpi.gpio
+
+
+
 - pour lancer ne pas oublier le sudo modprobe uinput
 
 nb : ne fonctionne que lorsqu'un écran est branché
+
+
+
+
+ne pas oublier la licence subsonic

@@ -21,40 +21,30 @@ function blink(selector){
 }
 
 
-/* create progress bar */
-function getProgressbar(){
-  var bar=$('<div class="progress">'+
-              '<div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
-              '</div>'+
-            '</div>');
-  return bar;
-}
-
-/* add progress bar to div */
-function addProgressBar(key){
-  $("#song"+key).find(".media-body").append(getProgressbar());
+/* enable progress bar to div */
+function enableProgressBar  (key){
+  $("#song"+key).find(".progress").removeClass("invisible");
   $("#song"+key).find(".media-heading").prepend('<span class="glyphicon glyphicon-play"></span>');
 }
 
-/* remove progress bar */
-function removeProgressBar(){
-    $(".progress").remove();
-    $(".glyphicon-play").remove();
+/* disable progress bar */
+function disableProgressBar(key){
+    $("#song"+key).find(".progress").addClass("invisible");
+    $("#song"+key).find(".glyphicon-play").remove();
     currentSongIndex=null;
     currentSongKey=null;
 }
 
 /* refresh progress bar */
-function refreshProgressBar(){
+function refreshProgressBar(key){
   $("#sound").on("timeupdate", function() {
     var progress = (this.currentTime / this.duration)*100; 
     //console.log(progress);
-    $("#progressBar").css("width", progress+"%");
-    $("#progressBar").attr("aria-valuenow", progress+"%");
+    $("#song"+key).find("#progressBar").css("width", progress+"%");
+    $("#song"+key).find("#progressBar").attr("aria-valuenow", progress+"%");
     // for case when song ended without pressing stop
     if(progress==100){
-      $(".progress").remove();
-      $(".glyphicon-play").remove();
+      disableProgressBar(key)
     }
   });
 }

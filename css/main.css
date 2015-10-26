@@ -19,7 +19,8 @@ body {
 }
 
 .progress {
-    margin-top: 30px;
+    margin-top: 10px;
+    margin-bottom: 0px;
     height: 30px;
 }
 

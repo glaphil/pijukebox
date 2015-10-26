@@ -33,12 +33,13 @@
   var MODAL_TIMEOUT=1500;
 
   var currentPage=0;
+  // current song playing
   var currentSongIndex=null; 
   var currentSongKey=null; 
   // all songs from playlist
   var songs = [];
   var songsCount = 0;
-  // current page songs
+  // current page songs positions in songs array
   var page = [];
 
   var coinInserted = false; 
@@ -74,16 +75,16 @@ function loadPage(pageId){
   index = pageId*MAX_THUMBS;
   page.length=0;
   for(i = index; i < (MAX_THUMBS+(pageId*MAX_THUMBS))  && i<songs.length ; i++) {
-    page.push(songs[i]);
+    page.push(i);
   }
   console.log(page);
+  displayPage(page);
 }
 
 /* swich to next page */
 function nextPage(){
   if(hasNextPage()){
     loadPage(currentPage+1);
-    // displayThumbs(songs,currentPage);
   }else{
     console.log("last page reached")
   }
@@ -93,7 +94,6 @@ function nextPage(){
 function previousPage(){
   if(hasPreviousPage()){
     loadPage(currentPage-=1);
-    // displayThumbs(songs,currentPage);
   }else{
     console.log("first page reached")
   }
@@ -107,42 +107,45 @@ function hasPreviousPage(){
   return currentPage>0;
 }
 
-function displayThumbs(songs, page){
+function displayPage(page){
+  console.log("page count : "+page.length)
   $( "#thumbs" ).empty();
-  var index = page*MAX_THUMBS;
-  console.log("start display "+(index+1)+" on "+songs.length+" with max thumbs "+MAX_THUMBS)
+  
   var thumbsByRowCount=0;
   var currentRow;
-  var divId=1;
-  for (i = index; i < index+MAX_THUMBS && i<songs.length ; i++) {
-    // start new row
+  var divId=0;
+  for(i = 0; i < page.length ; i++) {
+     // start new row
     if(thumbsByRowCount==0){
       currentRow=$('<div class="row">');
     }
     // cover left or right
     if(i%2==0){
-      currentRow.append(createThumbSong(songs[i],true,divId));
+      currentRow.append(createThumbSong(songs[page[i]],true,divId));
     }else{
-      currentRow.append(createThumbSong(songs[i],false,divId));
+      currentRow.append(createThumbSong(songs[page[i]],false,divId));
     }
     divId++;
     thumbsByRowCount++;
     // close current row and append to parent div
-    if(thumbsByRowCount==2 || i == songs.length-1){
+    if(thumbsByRowCount==2 || i == page.length-1){
       currentRow.append('</div>');
       $("#thumbs").append(currentRow)
       thumbsByRowCount=0
     }
-  } 
-  // if current song playing presnet in page, add progress bar
-  if(currentSongIndex!=null && currentSongIndex>=index && currentSongIndex<index+MAX_THUMBS){
-    addProgressBar(currentSongKey)
-    refreshProgressBar();
+  }
+  // if current song playing present in page, add progress bar
+  var currentSongPosition=$.inArray(currentSongIndex, page);
+  if (currentSongPosition > -1) {
+    enableProgressBar(currentSongPosition);
+    refreshProgressBar(currentSongPosition);
+    blink($("#song"+currentSongPosition).find(".glyphicon-play"));
   }
   // if no song playing remove eventual progress bar
-  if(currentSongIndex==null){
-    removeProgressBar();
-  }
+//  if(currentSongIndex==null){
+//    removeProgressBar();
+//  }
+
 }
 
 function createThumbSong(song,left,divId){
@@ -150,13 +153,17 @@ function createThumbSong(song,left,divId){
   if(left){
     div+='<div class="media-left"><img class="media-object img-thumbnail" src='+getCoverArt(song)+' width="'+COVER_SIZE+'" height="'+COVER_SIZE+'"></div>';
    }
-  div+='<div class="media-body">';
-  div+='<h3 class="media-heading">'+song.title+'</h3>';
-  div+='<h4>'+song.artist+'</h4>';
-  div+='<span class="glyphicon glyphicon-music"></span> '+song.album+' ('+song.year+')</br>';
-  div+='<span class="glyphicon glyphicon-headphones"></span> '+song.genre+'</br>';
-  div+='<span class="glyphicon glyphicon-time"></span> '+convertDurationToMMSS(song.duration)+'</br>';
-  div+='</div>';
+  div+='<div class="media-body">'+
+          '<h3 class="media-heading">'+song.title+'</h3>'+
+          '<h4>'+song.artist+'</h4>'+
+          '<span class="glyphicon glyphicon-music"></span> '+song.album+' ('+song.year+')</br>'+
+          '<span class="glyphicon glyphicon-headphones"></span> '+song.genre+'</br>'+
+          '<span class="glyphicon glyphicon-time"></span> '+convertDurationToMMSS(song.duration)+'</br>'+
+          '<div class="progress invisible">'+
+            '<div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
+            '</div>'+
+          '</div>'+
+        '</div>';
   if(!left){
     div+='<div class="media-right"><img class="media-object img-thumbnail" src='+getCoverArt(song)+' width="'+COVER_SIZE+'" height="'+COVER_SIZE+'"></div>';
    } 
@@ -265,23 +272,27 @@ function playSong(key){
   if(coinInserted){
 
     // map key to song index
-    songIndex=(currentPage*MAX_THUMBS)+eval(key)-1;
-    console.log("song index "+songIndex);
-    console.log("play song "+songs[songIndex].title);
-    currentSongIndex = songIndex;
+    var pageSongIndex=eval(key)-1;
+    
+    console.log("song index "+pageSongIndex);
+    
+    currentSongIndex=(currentPage*MAX_THUMBS)+eval(pageSongIndex);
+    
     currentSongKey=key;
-    var streamSongUrl = SUBSONIC_API_URL + "/stream.view?id="+songs[songIndex].id+"&"+$.param(SUBSONIC_API_CREDENTIALS);
+
+    var streamSongUrl = SUBSONIC_API_URL + "/stream.view?id="+songs[currentSongIndex].id+"&"+$.param(SUBSONIC_API_CREDENTIALS);
+
 
     audioElement.src = streamSongUrl;
     audioElement.load();
     audioElement.play();
     coinInserted=false;
-    console.log('play "'+songs[songIndex].title+'" ('+songs[songIndex].title+')');
+    console.log('play "'+songs[currentSongIndex].title+'" ('+songs[currentSongIndex].title+')');
     
     // add progress bar and play icon
-    addProgressBar(key)
-    refreshProgressBar();
-    blink($("#song"+key).find(".glyphicon-play"));
+    enableProgressBar(pageSongIndex)
+    refreshProgressBar(pageSongIndex);
+    blink($("#song"+pageSongIndex).find(".glyphicon-play"));
 
   }else{
     showModal("Please, insert a coin before choosing a song");
@@ -296,7 +307,7 @@ function stopSong(){
     audioElement.pause();
     audioElement.currentTime = 0;
     coinInserted=false;
-    removeProgressBar()
+    disableProgressBar(currentSongKey-1)
   }else{
     // showModal("No song playing now"); 
     console.log("no song to stop");

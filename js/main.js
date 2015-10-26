@@ -1,8 +1,6 @@
-// TODO format : remove uppercase/lowercase, title begin with uppercase, duration in min sec, remove track number from title (ex : 01 - title)
-// TODO optim : utiliser la pagination
-// TOOD qualité : faire un truc pour recalculer le gain moyen de la playlist, replaygain, etc.. en se basant sur les infos tags
-// TODO bug : 
-//  ne pas utiliser le width et height sur img (comment gérer la taile des nocover?)
+// FIX ME : avoid width and height on img 
+// FIX ME : use objects to avoid spaghetti code :D
+// FIX ME : use a javascript mvc framework :D :D
 
 // workflow
 // insert coin -> play song ->  stop song
@@ -11,44 +9,25 @@
 // stop song set coin inserted to false if song is playing
 // can't play song if no coin inserted
 
-// TODO numéroter à partir de 0 et faire juste -1 sur les chiffres des morceaux 
-
-// subsonic
- var SUBSONIC_URL = "http://localhost:4040";
- var SUBSONIC_API_URL = SUBSONIC_URL+"/rest"
- var SUBSONIC_API_CREDENTIALS = {
-          u : 'admin',
-          p : 'admin',
-          c : 'myJukebox',
-          v : '1.12.0',
-          f : 'json'
-      };
-  var SUBSONIC_PLAYSLIST_NAME = "myjukebox";
-  
-  // display & controls
-  var MAX_THUMBS=8;
-  var NO_COVER_URL="img/nocover.png"
-  // size ok for 1440x900, try 250 for my laptop (1920*1080)
-  var COVER_SIZE=200;
-  var MODAL_TIMEOUT=1500;
-
   var currentPage=0;
   // current song playing
   var currentSongIndex=null; 
-  var currentSongKey=null; 
+  var pageSongIndex=null; 
+ 
   // all songs from playlist
   var songs = [];
-  var songsCount = 0;
-  // current page songs positions in songs array
+ 
+  // current page songs indices (from songs array)
   var page = [];
 
   var coinInserted = false; 
+  
   // to avoid multiple modal display
   var lockModal = false; 
 
   var audioElement = $("#sound")[0];
 
-// to test display on smaller resolution
+  var paused = false;
 
 // pour la set list utiliser 
 // array.pop()
@@ -64,6 +43,9 @@ $(function(){
 
   // listen to keyboard
   listenKeyboard();
+
+  // end of song listener
+  checkSongPlaying()
 
 });
 
@@ -99,95 +81,22 @@ function previousPage(){
   }
 }
 
+/* true if next page exists */
 function hasNextPage(){
-  return (currentPage+1)*MAX_THUMBS<songsCount;
+  return (currentPage+1)*MAX_THUMBS<songs.length;
 }
 
+/* true if previous page exists */
 function hasPreviousPage(){
   return currentPage>0;
 }
 
-function displayPage(page){
-  console.log("page count : "+page.length)
-  $( "#thumbs" ).empty();
-  
-  var thumbsByRowCount=0;
-  var currentRow;
-  var divId=0;
-  for(i = 0; i < page.length ; i++) {
-     // start new row
-    if(thumbsByRowCount==0){
-      currentRow=$('<div class="row">');
-    }
-    // cover left or right
-    if(i%2==0){
-      currentRow.append(createThumbSong(songs[page[i]],true,divId));
-    }else{
-      currentRow.append(createThumbSong(songs[page[i]],false,divId));
-    }
-    divId++;
-    thumbsByRowCount++;
-    // close current row and append to parent div
-    if(thumbsByRowCount==2 || i == page.length-1){
-      currentRow.append('</div>');
-      $("#thumbs").append(currentRow)
-      thumbsByRowCount=0
-    }
-  }
-  // if current song playing present in page, add progress bar
-  var currentSongPosition=$.inArray(currentSongIndex, page);
-  if (currentSongPosition > -1) {
-    enableProgressBar(currentSongPosition);
-    refreshProgressBar(currentSongPosition);
-    blink($("#song"+currentSongPosition).find(".glyphicon-play"));
-  }
-  // if no song playing remove eventual progress bar
-//  if(currentSongIndex==null){
-//    removeProgressBar();
-//  }
-
-}
-
-function createThumbSong(song,left,divId){
-  var div = '<div id="song'+divId+'" class="col-md-6"><div class="media">';
-  if(left){
-    div+='<div class="media-left"><img class="media-object img-thumbnail" src='+getCoverArt(song)+' width="'+COVER_SIZE+'" height="'+COVER_SIZE+'"></div>';
-   }
-  div+='<div class="media-body">'+
-          '<h3 class="media-heading">'+song.title+'</h3>'+
-          '<h4>'+song.artist+'</h4>'+
-          '<span class="glyphicon glyphicon-music"></span> '+song.album+' ('+song.year+')</br>'+
-          '<span class="glyphicon glyphicon-headphones"></span> '+song.genre+'</br>'+
-          '<span class="glyphicon glyphicon-time"></span> '+convertDurationToMMSS(song.duration)+'</br>'+
-          '<div class="progress invisible">'+
-            '<div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">'+
-            '</div>'+
-          '</div>'+
-        '</div>';
-  if(!left){
-    div+='<div class="media-right"><img class="media-object img-thumbnail" src='+getCoverArt(song)+' width="'+COVER_SIZE+'" height="'+COVER_SIZE+'"></div>';
-   } 
-   div+='</div></div>';
-  return div;
-}
-
-
-function getCoverArt(song){
-  if(song.cover){
-    console.log("found cover art : " + song.cover)
-    var coverUrl = SUBSONIC_API_URL + "//getCoverArt.view?id="+song.cover+"&size="+COVER_SIZE+"&"+$.param(SUBSONIC_API_CREDENTIALS);
-    return coverUrl
-  }else{
-    console.log("no cover art found : use no cover")
-    return NO_COVER_URL;
-  }
-}
-
-
+// register keyboard event listener
 function listenKeyboard(){
   $('#page').bind('keyup', keyboard);
 }
 
+// keyboard event listener
 function keyboard(event) {
     var key=String.fromCharCode(event.keyCode);
     console.log('key: '+ key);
@@ -223,6 +132,7 @@ function keyboard(event) {
 
 }
 
+// true if key is mapped to a song in thumbs page
 function isSongSelection(key) {
   // number 
   if(isNaN(parseFloat(key)) || !isFinite(key)){
@@ -245,6 +155,7 @@ function isSongSelection(key) {
   return true;
 }
 
+// a coin is inserted
 function insertCoin(){
    // music playing 
   if(!audioElement.paused){
@@ -267,19 +178,18 @@ function insertCoin(){
   }
 }
 
+// play song identified by its position in thumbs page
 function playSong(key){
   console.log("coin inserted "+coinInserted);
   if(coinInserted){
 
-    // map key to song index
-    var pageSongIndex=eval(key)-1;
+    // map key to page song index
+    pageSongIndex=eval(key)-1;
     
     console.log("song index "+pageSongIndex);
     
     currentSongIndex=(currentPage*MAX_THUMBS)+eval(pageSongIndex);
     
-    currentSongKey=key;
-
     var streamSongUrl = SUBSONIC_API_URL + "/stream.view?id="+songs[currentSongIndex].id+"&"+$.param(SUBSONIC_API_CREDENTIALS);
 
 
@@ -300,19 +210,24 @@ function playSong(key){
   }
 }
 
-
+/* stop current playing song */
 function stopSong(){
   if(!audioElement.paused){
     // showModal("Song has been stopped");
     audioElement.pause();
     audioElement.currentTime = 0;
     coinInserted=false;
-    disableProgressBar(currentSongKey-1)
+    disableProgressBar(pageSongIndex)
   }else{
     // showModal("No song playing now"); 
     console.log("no song to stop");
   }
 }
 
-
+/* listen to end of song */
+function checkSongPlaying(){
+  $("#sound").on("ended", function() {
+    console.log("fin")
+  });
+}
   

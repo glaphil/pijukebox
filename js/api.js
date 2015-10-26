@@ -1,3 +1,4 @@
+// check subsonic server is up
 function pingSubsonic(){
     var url = SUBSONIC_API_URL + "/ping.view";
     $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {          
@@ -8,7 +9,7 @@ function pingSubsonic(){
         })
 };
 
-
+// get playlist by name and call setPlaylistContent
 function getPlaylist(){
     var url = SUBSONIC_API_URL + "/getPlaylists.view";
     $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {      
@@ -26,6 +27,7 @@ function getPlaylist(){
         })
 }
 
+// populate songs array from subsonic playlist identified by its id
 function setPlaylistContent(playlistId){
     var url = SUBSONIC_API_URL + "/getPlaylist.view?id="+playlistId;
     $.getJSON(url, SUBSONIC_API_CREDENTIALS, function (response) {      
@@ -41,14 +43,13 @@ function setPlaylistContent(playlistId){
               cover: song.coverArt,
               duration: song.duration
             })
-            songsCount++;
           })
         })
         .fail(function(response) {
            alert("Can't get play list "+ playlistId);
         })
         .complete(function(data){
-          console.log("["+songsCount+"] songs from playlist");
+          console.log("["+songs.length+"] songs from playlist");
           loadPage(0);
         });
 }

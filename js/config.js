@@ -24,6 +24,4 @@
   // time before modal popup disappear
   var MODAL_TIMEOUT=1500;
 
-  // max songs in playlist (= max credits counted)
-  var MAX_PLAYLIST=10;
 

@@ -99,30 +99,24 @@ function listenKeyboard(){
 // keyboard event listener
 function keyboard(event) {
     var key=String.fromCharCode(event.keyCode);
-    // console.log('key: '+ key);
+    console.log('key: '+ key);
     if(isSongSelection(key)){
-        // console.log("key input : add song "+key)
         processSong(key);
     }else{
       switch (key) { 
         case 'N': 
-          // console.log('key input : next page');
           nextPage();
           break;
         case 'P': 
-          // console.log('key input : previous page');
           previousPage();
           break;
         case 'C':
-          // console.log('key input : coin inserted');
           insertCoin()
           break;
         case 'S':
-          // console.log('key input : stop song');
           stopSong()
           break;
         case 'H':
-          // console.log('key input : toggle diplay controls');
           $("#keyboardControls").toggle();
           break;
         default:

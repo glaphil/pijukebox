@@ -181,18 +181,26 @@ function processSong(key){
     if(currentSongIndex==null){
       playSong(songSongsIndex);
     }else{
-      console.log("song playing, add to playlist");
-      currentPlaylist.push(songSongsIndex);
-      console.log(currentPlaylist);
+      addToCurrentPlaylist(songSongsIndex);
     }
   }
+}
+
+/* add song identified by its position in songs array to current playlist */
+function addToCurrentPlaylist(songSongsIndex){
+    console.log("song playing, add to playlist");
+    currentPlaylist.push(songSongsIndex);
+    console.log(currentPlaylist);
+    displayCurrentPlaylist(currentPlaylist);
 }
 
 /* play song identified by its position in songs array */
 function playSong(songSongsIndex){
     console.log("play song index "+songSongsIndex);
-    console.log('play song '+songSongsIndex+'" : "'+songs[songSongsIndex].title+'" ('+songs[songSongsIndex].title+')');
+    console.log('play song '+songSongsIndex+'" : "'+songs[songSongsIndex].title+'" ('+songs[songSongsIndex].artist+')');
     
+    showModal(songs[songSongsIndex].title+" ("+songs[songSongsIndex].artist+")");
+
     currentSongIndex=songSongsIndex;
 
     var streamSongUrl = SUBSONIC_API_URL + "/stream.view?id="+songs[songSongsIndex].id+"&"+$.param(SUBSONIC_API_CREDENTIALS);

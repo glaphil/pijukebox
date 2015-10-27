@@ -2,7 +2,7 @@
 function showModal(message){
   if(!lockModal){
     lockModal=true;
-    $("#modal h1").text(message);
+    $("#modal h1").html(message);
     $("#modal").modal('show');
       setTimeout(function(){
         $("#modal").modal('hide');
@@ -123,4 +123,13 @@ function blink(selector){
           blink(this);
       });
   });
+}
+
+// display current play list in modal */
+function displayCurrentPlaylist(currentPlaylist){
+  var text="Playing next : <br />";
+  $.each(currentPlaylist, function(index, songId) {
+      text+=songs[songId].title+" ("+songs[songId].artist+")"+"<br />";
+  });
+  showModal(text);
 }

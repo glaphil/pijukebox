@@ -36,7 +36,9 @@ expand filesystem, change password, change locale,
 
 - install subsonic
 sudo dpkg -i subsonic-5.2.1.deb
-...
+
+!!!!!ne pas oublier la licence subsonic
+
 
 - git clone du projet
 git clone https://glaphil@bitbucket.org/glaphil/myjukebox.git
@@ -59,7 +61,10 @@ sudo apt-get update && sudo apt-get install python-rpi.gpio python3-rpi.gpio
 
 nb : ne fonctionne que lorsqu'un écran est branché
 
+- installer iceweasel (équivalent firefox) -> + rapide que le nav de base (mise en cache des pochettes etc...)
+sudo apt-get install iceweasel
 
 
-
-ne pas oublier la licence subsonic
+lancement important
+sudo modprobe uinput
+sudo python3 buttonsToKeysWithCallbacks.py

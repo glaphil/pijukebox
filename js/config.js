@@ -19,7 +19,7 @@
   var NO_COVER_URL="img/nocover.png"
   
   // cover art size (ok for 1440x900, try 250 for 1920*1080)
-  var COVER_SIZE=200;
+  var COVER_SIZE=218;
   
   // time before modal popup disappear
   var MODAL_TIMEOUT=1500;

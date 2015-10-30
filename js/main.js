@@ -98,25 +98,26 @@ function listenKeyboard(){
 
 // keyboard event listener
 function keyboard(event) {
-    var key=String.fromCharCode(event.keyCode);
+    // work both from uinput event or real keyboard (http://stackoverflow.com/questions/5630918/get-correct-keycode-for-keypadnumpad-keys)
+    var key=event.key || String.fromCharCode(event.keyCode);
     console.log('key: '+ key);
     if(isSongSelection(key)){
         processSong(key);
     }else{
       switch (key) { 
-        case 'N': 
+        case 'n': 
           nextPage();
           break;
-        case 'P': 
+        case 'p': 
           previousPage();
           break;
-        case 'C':
+        case 'c':
           insertCoin()
           break;
-        case 'S':
+        case 's':
           stopSong()
           break;
-        case 'H':
+        case 'h':
           $("#keyboardControls").toggle();
           break;
         default:

@@ -200,7 +200,7 @@ function playSong(songSongsIndex){
     console.log("play song index "+songSongsIndex);
     console.log('play song '+songSongsIndex+'" : "'+songs[songSongsIndex].title+'" ('+songs[songSongsIndex].artist+')');
     
-    showModal(songs[songSongsIndex].title+" ("+songs[songSongsIndex].artist+")");
+    showModal("Playing : <br />"+songs[songSongsIndex].title+" ("+songs[songSongsIndex].artist+")");
 
     currentSongIndex=songSongsIndex;
 

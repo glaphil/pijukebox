@@ -11,7 +11,7 @@ GPIO.setup(6, GPIO.IN,pull_up_down=GPIO.PUD_UP)
 def my_callback(channel):  
     if GPIO.input(6):    
         print("Rising edge detected")
-            else:                 
+    else:                 
         print("Falling edge detected")  
   
 GPIO.add_event_detect(6, GPIO.BOTH, callback=my_callback, bouncetime=500)  

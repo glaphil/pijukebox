@@ -14,7 +14,7 @@ def my_callback(channel):
     else:                 
         print("Falling edge detected")  
   
-GPIO.add_event_detect(6, GPIO.BOTH, callback=my_callback, bouncetime=500)  
+GPIO.add_event_detect(6, GPIO.BOTH, callback=my_callback, bouncetime=200)  
     
 try:  
     sleep(30)   

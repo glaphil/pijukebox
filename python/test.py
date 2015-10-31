@@ -18,7 +18,7 @@ def my_callback(channel):
   
 # when a changing edge is detected on port 25, regardless of whatever   
 # else is happening in the program, the function my_callback will be run  
-GPIO.add_event_detect(6, GPIO.BOTH, callback=my_callback)  
+GPIO.add_event_detect(6, GPIO.BOTH, callback=my_callback, bouncetime=50)  
     
 try:  
     sleep(30)         # wait 30 seconds  

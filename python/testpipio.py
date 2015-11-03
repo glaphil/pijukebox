@@ -14,7 +14,8 @@ def my_callback(gpio, level, tick):
 pi = pigpio.pi() # Connect to local Pi.
 
 pi.set_pull_up_down(GPIO, pigpio.PUD_UP)   
-pi.set_mode(GPIO, pigpio.INPUT)   
+pi.set_mode(GPIO, pigpio.INPUT) 
+pi.set_glitch_filter(GPIO, 50000)  
 
 cb = pi.callback(GPIO, pigpio.EITHER_EDGE, my_callback)
    

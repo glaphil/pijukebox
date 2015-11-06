@@ -105,12 +105,9 @@ def disconnectGPIO():
 
 def shudtown():
   disconnectGPIO()
-  command = "/usr/bin/sudo /sbin/shutdown -r now"
-  import subprocess
-  process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-  output = process.communicate()[0]
-  print(output)
-
+  import os
+  os.system("shutdown -h now")
+  
 try:  
   print("Init GPIO mappings callbacks")
   for pin in mappings.keys():

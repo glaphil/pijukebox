@@ -40,21 +40,21 @@ keys = {
   uinput.KEY_KP8
 }
 
-# mappings between pins and key press (tuples)
-mappings = [
-  (INSERT_COIN,uinput.KEY_C),
-  (PREVIOUS, uinput.KEY_P),
-  (NEXT, uinput.KEY_N),
-  (STOP, uinput.KEY_S),
-  (SONG_1, uinput.KEY_KP1),
-  (SONG_2, uinput.KEY_KP2),
-  (SONG_3, uinput.KEY_KP3),
-  (SONG_4, uinput.KEY_KP4),
-  (SONG_5, uinput.KEY_KP5),
-  (SONG_6, uinput.KEY_KP6),
-  (SONG_7, uinput.KEY_KP7),
-  (SONG_8, uinput.KEY_KP8)
-]
+# dictionnary key: pins, value: key 
+mappings = {
+  INSERT_COIN: uinput.KEY_C,
+  PREVIOUS: uinput.KEY_P,
+  NEXT: uinput.KEY_N,
+  STOP: uinput.KEY_S,
+  SONG_1: uinput.KEY_KP1,
+  SONG_2: uinput.KEY_KP2,
+  SONG_3: uinput.KEY_KP3,
+  SONG_4: uinput.KEY_KP4,
+  SONG_5: uinput.KEY_KP5,
+  SONG_6: uinput.KEY_KP6,
+  SONG_7: uinput.KEY_KP7,
+  SONG_8: uinput.KEY_KP8
+}
 
 callbacks = []
 
@@ -79,18 +79,17 @@ def emitKey(gpio, level, tick):
   else: 
     print(gpio," pressed")                
     print("Falling edge detected at")
-    device.emit(gpio,1) 
+    device.emit(gpio,1)
 
 try:  
-  for pinKey in mappings:
-    print("map ",pinKey[0]," to ",pinKey[1])
-    init_pin_mapping(pinKey)
+  for pin in mappings.iterkeys():
+    print("map ",pin," to ",mappings[ping])
+    init_pin_mapping(pin)
   while True:
     time.sleep(1)
 except KeyboardInterrupt:
-  # clean up GPIO on CTRL+C exit  
-  GPIO.cleanup()    
   for cb in callbacks:
     cb.cancel() # Cancel callback.
   pi.stop() # Disconnect from local Pi.
-     
+  
+

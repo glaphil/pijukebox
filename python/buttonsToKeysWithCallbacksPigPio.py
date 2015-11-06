@@ -103,7 +103,7 @@ def disconnectGPIO():
   print("Disconnect from local pi")
   pi.stop() 
 
-def shudtown():
+def shutdown():
   disconnectGPIO()
   import os
   os.system("shutdown -h now")

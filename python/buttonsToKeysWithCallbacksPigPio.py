@@ -69,20 +69,17 @@ def init_pin_mapping(pinKey):
   pi.set_pull_up_down(pinKey[0], pigpio.PUD_UP)   
   pi.set_mode(pinKey[0], pigpio.INPUT) 
   pi.set_glitch_filter(pinKey[0], GLITCH_FILTER)
-  callbacks.append(pi.callback(pinKey[0], pigpio.EITHER_EDGE, emitKey))
+  callbacks.append(pi.callback(pinKey[0], pigpio.EITHER_EDGE, emitKey)
 
-  #GPIO.add_event_detect(pinKey[0], GPIO.FALLING, callback=lambda x: emitKey(pinKey), bouncetime=BOUNCE_TIME) 
-
-
-def emitKey(pinKey, level, tick):
-   if level == 1: 
-      print(pinKey[1]," released")
-      print("Rising edge detected at", tick)
-      device.emit(pinKey[1],0) # release
-   else: 
-      print(pinKey[1]," pressed")                
-      print("Falling edge detected at", tick)
-      device.emit(pinKey[1],1) # press
+def emitKey(gpio, level, tick):
+  if level == 1: 
+    print(gpio," released")
+    print("Rising edge detected at")
+    device.emit(gpio,0) 
+  else: 
+    print(gpio," pressed")                
+    print("Falling edge detected at")
+    device.emit(gpio,1) 
 
 try:  
   for pinKey in mappings:

@@ -90,7 +90,7 @@ def holdStop(gpio, level, tick):
   if level == 1: 
     finish_of_stop_hold=time.time()
     duration = finish_of_stop_hold - start_of_stop_hold
-    if(duration>=HOLD_DURATION_TO_STOP)
+    if(duration>=HOLD_DURATION_TO_STOP):
       shutdown()
   else:
     start_of_stop_hold=time.time()

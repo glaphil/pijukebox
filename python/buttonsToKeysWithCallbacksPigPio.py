@@ -73,12 +73,11 @@ def init_pin_mapping(pin):
 
 def emitKey(gpio, level, tick):
   if level == 1: 
-    print(mappings[gpio]," released")
-    print("Rising edge detected at")
-    device.emit(mappings[gpio],1) 
+    #print("Rising edge detected, ", mappings[gpio], " released")
+    device.emit(mappings[gpio],1)
+    device.emit(mappings[gpio],0)
   else: 
-    print(mappings[gpio]," pressed")                
-    print("Falling edge detected at")
+    #print("Falling edge detected, ", mappings[gpio], " pressed")
     device.emit(mappings[gpio],0)
 
 try:  

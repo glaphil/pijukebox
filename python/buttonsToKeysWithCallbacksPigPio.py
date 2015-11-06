@@ -69,7 +69,7 @@ def init_pin_mapping(pinKey):
   pi.set_pull_up_down(pinKey[0], pigpio.PUD_UP)   
   pi.set_mode(pinKey[0], pigpio.INPUT) 
   pi.set_glitch_filter(pinKey[0], GLITCH_FILTER)
-  callbacks.append(pi.callback(pinKey[0], pigpio.EITHER_EDGE, emitKey)
+  callbacks.append(pi.callback(pinKey[0], pigpio.EITHER_EDGE, emitKey))
 
 def emitKey(gpio, level, tick):
   if level == 1: 
@@ -82,7 +82,7 @@ def emitKey(gpio, level, tick):
     device.emit(gpio,1)
 
 try:  
-  for pin in mappings.iterkeys():
+  for pin in mappings.keys():
     print("map ",pin," to ",mappings[ping])
     init_pin_mapping(pin)
   while True:

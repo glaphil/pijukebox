@@ -90,25 +90,41 @@ def holdStop(gpio, level, tick):
   if level == 1: 
     finish_of_stop_hold=time.time()
     duration = finish_of_stop_hold - start_of_stop_hold
-    print(duration)
     if(duration>=HOLD_DURATION_TO_STOP)
-      print("shutdown")
+      shutdown()
   else:
     start_of_stop_hold=time.time()
 
 
+def disconnectGPIO():
+  print("Cancel calbacks")
+  for cb in callbacks:
+    cb.cancel()
+  print("Disconnect from local pi")
+  pi.stop() 
+
+def shudtown():
+  disconnectGPIO()
+  command = "/usr/bin/sudo /sbin/shutdown -r now"
+  import subprocess
+  process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+  output = process.communicate()[0]
+  print output
 
 try:  
+  print("Init GPIO mappings callbacks")
   for pin in mappings.keys():
     print("map ",pin," to ",mappings[pin])
     init_pin_mapping(pin)
+  print("Init stop hold callback")
   init_hold_stop()
+  
+  print("Running main loop...")
   while True:
     time.sleep(1)
-except KeyboardInterrupt:
-  for cb in callbacks:
-    cb.cancel() # Cancel callback.
-  pi.stop() # Disconnect from local Pi.
 
- 
+except KeyboardInterrupt:
+  disconnectGPIO()
+
+
 

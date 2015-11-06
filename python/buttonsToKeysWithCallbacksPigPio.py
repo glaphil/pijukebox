@@ -10,6 +10,10 @@ import uinput
 # set bounce time to avoid multiple press in microseconds
 GLITCH_FILTER=50000
 
+# set duration of holding s key to shutdown the pi (in seconds)
+HOLD_DURATION_TO_STOP=5
+start_of_stop_hold=0
+
 # pins names / bcm gpio
 INSERT_COIN = 4
 PREVIOUS = 17
@@ -60,9 +64,6 @@ callbacks = []
 
 device = uinput.Device(keys)
 
-# because GPIO.FALLING detect both failling and rising edge, need to set this variable to fix that issue
-ignore_key_release_fix = False
-
 pi = pigpio.pi() # Connect to local Pi.
 
 def init_pin_mapping(pin):
@@ -70,6 +71,10 @@ def init_pin_mapping(pin):
   pi.set_mode(pin, pigpio.INPUT) 
   pi.set_glitch_filter(pin, GLITCH_FILTER)
   callbacks.append(pi.callback(pin, pigpio.EITHER_EDGE, emitKey))
+
+def init_hold_stop():
+  callbacks.append(pi.callback(STOP, pigpio.EITHER_EDGE, holdStop))
+
 
 def emitKey(gpio, level, tick):
   if level == 1: 
@@ -79,16 +84,31 @@ def emitKey(gpio, level, tick):
   else: 
     #print("Falling edge detected, ", mappings[gpio], " pressed")
     device.emit(mappings[gpio],0)
+  
+def holdStop(gpio, level, tick):
+  global start_of_stop_hold
+  if level == 1: 
+    finish_of_stop_hold=time.time()
+    duration = finish_of_stop_hold - start_of_stop_hold
+    print(duration)
+    if(duration>=HOLD_DURATION_TO_STOP)
+      print("shutdown")
+  else:
+    start_of_stop_hold=time.time()
+
+
 
 try:  
   for pin in mappings.keys():
     print("map ",pin," to ",mappings[pin])
     init_pin_mapping(pin)
+  init_hold_stop()
   while True:
     time.sleep(1)
 except KeyboardInterrupt:
   for cb in callbacks:
     cb.cancel() # Cancel callback.
   pi.stop() # Disconnect from local Pi.
-  
+
+ 
 

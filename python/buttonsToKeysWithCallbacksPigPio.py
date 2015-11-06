@@ -65,25 +65,25 @@ ignore_key_release_fix = False
 
 pi = pigpio.pi() # Connect to local Pi.
 
-def init_pin_mapping(pinKey):
-  pi.set_pull_up_down(pinKey[0], pigpio.PUD_UP)   
-  pi.set_mode(pinKey[0], pigpio.INPUT) 
-  pi.set_glitch_filter(pinKey[0], GLITCH_FILTER)
-  callbacks.append(pi.callback(pinKey[0], pigpio.EITHER_EDGE, emitKey))
+def init_pin_mapping(pin):
+  pi.set_pull_up_down(pin, pigpio.PUD_UP)   
+  pi.set_mode(pin, pigpio.INPUT) 
+  pi.set_glitch_filter(pin, GLITCH_FILTER)
+  callbacks.append(pi.callback(pin, pigpio.EITHER_EDGE, emitKey))
 
 def emitKey(gpio, level, tick):
   if level == 1: 
-    print(gpio," released")
+    print(mappings[gpio]," released")
     print("Rising edge detected at")
-    device.emit(gpio,0) 
+    device.emit(mappings[gpio],1) 
   else: 
-    print(gpio," pressed")                
+    print(mappings[gpio]," pressed")                
     print("Falling edge detected at")
-    device.emit(gpio,1)
+    device.emit(mappings[gpio],0)
 
 try:  
   for pin in mappings.keys():
-    print("map ",pin," to ",mappings[ping])
+    print("map ",pin," to ",mappings[pin])
     init_pin_mapping(pin)
   while True:
     time.sleep(1)

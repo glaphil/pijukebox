@@ -25,7 +25,7 @@ SONG_3 = 13
 SONG_4 = 16  
 SONG_5 = 19
 SONG_6 = 20
-SONG_7 = 26
+SONG_7 = 22
 SONG_8 = 21
 
 # keys press 

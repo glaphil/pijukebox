@@ -67,4 +67,24 @@ sudo apt-get install iceweasel
 
 lancement important
 sudo modprobe uinput
+sudo pigpiod
 sudo python3 buttonsToKeysWithCallbacks.py
+
+modif : 
+pigpio marche mieux (pas dispo sur les dépots python je crois Available on PyPi: NO)
+http://abyz.co.uk/rpi/pigpio/download.html
+
+
+wget abyz.co.uk/rpi/pigpio/pigpio.zip
+unzip pigpio.zip
+cd PIGPIO
+make
+sudo make install
+
+# To start the pigpio daemon
+sudo pigpiod
+
+# pas besoin de faire un pip install car j'ai l'impression que ça install aussi la partie python
+
+
+https://www.raspberrypi.org/forums/viewtopic.php?t=8298&p=210611

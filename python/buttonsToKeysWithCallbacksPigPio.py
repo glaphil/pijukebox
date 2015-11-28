@@ -85,6 +85,7 @@ def emitKey(gpio, level, tick):
     #print("Falling edge detected, ", mappings[gpio], " pressed")
     device.emit(mappings[gpio],0)
   
+# to fix ? rasp shutdown as soon as this handler is registred, or maybe false contact? 
 def holdStop(gpio, level, tick):
   global start_of_stop_hold
   if level == 1: 
@@ -113,8 +114,8 @@ try:
   for pin in mappings.keys():
     print("map ",pin," to ",mappings[pin])
     init_pin_mapping(pin)
-  print("Init stop hold callback")
-  init_hold_stop()
+  #print("Init stop hold callback")
+  #init_hold_stop()
   
   print("Running main loop...")
   while True:

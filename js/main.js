@@ -1,6 +1,5 @@
 // FIX ME : avoid width and height on img 
-// FIX ME : use object and design patterns to avoid spaghetti code :D
-// FIX ME : use a javascript mvc framework :D :D
+// FIXE ME : if we insert coin and chose song then stop quickly, stop is not taken in account (with keyboard :  C 1 S)
 
 // current page index  
 var currentPage=0;

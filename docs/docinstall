@@ -1,30 +1,3 @@
-- Installation Ubuntu MAte
-	Suivre instruction https://ubuntu-mate.org/raspberry-pi/
-	(dl image puis copie sur la carte, re size du fs après premier démarrage...)
-- Update
-	sudo apt-get update && sudo apt-get upgrade
-- Installer openjdk 7 (jre only)
-	sudo apt-get install openjdk-7-jre
-- Installation subsonic + création playlist
-	dl le .deb
-	sudo dpkg -i subsonic-5.2.1.deb 
-	aller sur localhost:4040, se logger avec admin/admin
-	configurer votre dossier de music 
-	nb : pour avoir accès aux pochettes il faut que les morceaux se trouvent chacun dans leur répertoire, les pochettes des albums étant liés au répertoire (si non trouvées automatiquement on peut cliquer sur change depuis l'ui)
-	créer une playlist "myjukebox", le nom est important, et ajoutez y vos morceaux (cochez les morceaux et choisissez "add to playlist", puis sélectionner "myjukebox")
-- Installation appli
-	checkout du master sur le repo git
-- Mp3 pour firefox
-	sudo apt-get install gstreamer1.0-libav
-- Lancer l'appli : ouvrir le index.html dans un navigateur
-
-STOP sur mate probleme avec le gpio
-donc retour sur rasbpian, ça tombe bien une version vient de sortir et sur epiphany : http://html5test.com/ on a bien mp3 ok, et finalement ça à l'air plus rapide
-
-- epiphany presque ok -> certains morceaux bugs d'affichage sur la barre de progression
-
---- Nouvelle procédure 11/10/2015
-
 - installer raspbian https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
 
 df -h
@@ -38,7 +11,17 @@ expand filesystem, change password, change locale,
 sudo dpkg -i subsonic-5.2.1.deb
 
 !!!!!ne pas oublier la licence subsonic
+aller sur localhost:4040, se logger avec admin/admin
+	configurer votre dossier de music 
+	nb : pour avoir accès aux pochettes il faut que les morceaux se trouvent chacun dans leur répertoire, les pochettes des albums étant liés au répertoire (si non trouvées automatiquement on peut cliquer sur change depuis l'ui)
+	créer une playlist "myjukebox", le nom est important, et ajoutez y vos morceaux (cochez les morceaux et choisissez "add to playlist", puis sélectionner "myjukebox")
+SI AU BOUT DE 30 jours pas enregistré alors on peut plus interrogé l'API 
+IMPORTANT!
+dans l'ui cliquer sur get subsonci premium et entrer mail + clé
 
+
+pour uploader des morceaux passer par l'icone More et en bas y a un lien upload, il y a dezip automatique
+donc on peut tenter de charger des reps d'un coup sous un seul zip?
 
 - git clone du projet
 git clone https://glaphil@bitbucket.org/glaphil/myjukebox.git
@@ -88,3 +71,64 @@ sudo pigpiod
 
 
 https://www.raspberrypi.org/forums/viewtopic.php?t=8298&p=210611
+
+#
+
+wifi
+apres avoir choisi le réseau via l'icone
+
+dans /etc/network/interfaces
+remplacer 
+(iface eth0 inet manual
+iface wlan inet manual
+par
+iface eth0 inet dhcp
+iface wlan inet dhcp
+puis redémarrer réseau avec /etc/init.d/networking restart
+
+#
+
+active numlock
+
+sudo apt-get install numlockx
+sudo vi /etc/X11/xinit/xinitrc
+pour ajouter 
+
+if [ -x /usr/bin/numlockx ];
+then
+    /usr/bin/numlockx on
+fi
+
+et redémarrer
+
+#
+
+plugin full screen pour iceweasel
+https://addons.mozilla.org/en-us/firefox/addon/r-kiosk/
+attention pour le desactiver il faut lancer iceweseal en safe mode 
+iceweseal -safe-mode
+
+lancement automatique iceweseal
+
+ajouter au fichier suivant 
+
+sudo vi /etc/xdg/lxsession/LXDE/autostart
+
+@sudo modprobe uinput
+@sudo pigpiod
+@sudo python3 /home/pi/myjukebox/python/buttonsToKeysWithCallbacks.py
+@iceweasel file:///home/pi/myjukebox/index.html
+
+
+TODO : faire marcher démarrage script + iceweasel 
+désactiver le screensaver (vérifier si pression sur un des boutons le réactive)
+désactiver curseur souris
+
+concernant le démarrage long  "A start job is running for LSB: Raise network interfaces"
+https://debian-facile.org/viewtopic.php?id=10214
+mais à prior que avec le dongle usb branché
+
+
+ATTENTION AVANT PREMIER LANCEMENT
+il faut lancer une appli audui pour forcer l'utilisation du casque (ex un des jeux)
+le navigateur provoque pas ce choix

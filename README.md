@@ -4,6 +4,20 @@ video : https://www.youtube.com/watch?v=-_20csVALK0
 
 blog post : http://glaphil.blogspot.fr/2015/12/jukebox-diy-raspberry-pi-subsonic.html
 
+## Content
+2 parts : 
+- a minimal JS client app I developped to interact with subsonic 
+    - js : javascript code
+        - api.js : all api calls (get playlist, get song info, ...)
+        - config.js : config stuff (such as login/password for subsonic, server location...)
+        - display.js : all code used for dispay
+        - utils.js : some utilitary functions
+        - main.js : main script
+    - css : some css adjustments
+    - img : no cover picture and background picture
+    - bootstrap-3.3.5-dist & jquery-1.11.3 : libs used by the JS app
+- a python script I wrote to manage keypress (using pigpio lib, uinput module)
+    - python : buttonsToKeysWithCallbacksPigPio.py
 
 ## Software Preparation
 - install raspbian on sd card : https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
@@ -52,6 +66,6 @@ blog post : http://glaphil.blogspot.fr/2015/12/jukebox-diy-raspberry-pi-subsonic
 - Implement cheat codes to get 'free' songs (by pressing buttons sequence)
 - Debug the jukebox shutdown (commented in the python script, a press for more than 5 seconds on stop should shutdown)
 - Client app for Spotify and Deezer API
-- ...
+- Find a fancy name for that project
 - 
 

@@ -1,4 +1,10 @@
 # Raspberry pi Jukebox based on Subsonic
+
+video : https://www.youtube.com/watch?v=-_20csVALK0
+
+blog post : http://glaphil.blogspot.fr/2015/12/jukebox-diy-raspberry-pi-subsonic.html
+
+
 ## Software Preparation
 - install raspbian on sd card : https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
 - install subsonic : http://subsonic.org

@@ -59,13 +59,12 @@ blog post : http://glaphil.blogspot.fr/2015/12/jukebox-diy-raspberry-pi-subsonic
 ## known problems
 - buttons doesn't work
     - did you enable numlock ?
-    - interact with the app with the keyboard (type h to get help on the keys) and log press event to js console, check if it correspond to the one emited by the buttons in the python script
+    - interact with the app with the keyboard (type h to get help on the keys) and log press event to js console, check if it corresponds to the one emited by the buttons in the python script
     
 ## Todos 
 - Script to launch everything on startup (no need to plug a mouse or keyboard)
 - Implement cheat codes to get 'free' songs (by pressing buttons sequence)
 - Debug the jukebox shutdown (commented in the python script, a press for more than 5 seconds on stop should shutdown)
 - Client app for Spotify and Deezer API
-- Find a fancy name for that project
-- 
+- Find a cool name for that project :D
 
